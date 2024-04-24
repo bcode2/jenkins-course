@@ -1,72 +1,75 @@
+def numero1 = 15
+def numero2 = 10
+def sumaResult
 pipeline
-	def numero1 = 15
-	def numero2 = 10
-	def sumaResult
-{
-    agent any
-
-    options
-    {
-        timeout(time:5, unit: 'MINUTES')
-    }
-
-    environment
-    {
-        RUTA_ABSOLUTA = "C:\\sumaresult.txt"
-    }
-
-    stages
-    {
-	    stage("Tarea01: Realizar operaciones aritmeticas generales con dos numeros agregados e informar por consola los valores")
         {
-            steps
-            {
-           	suma = numero1 + numero2
-           						sumaResult="La suma de los dos numeros es: "+ suma
-           					    echo sumaResult
-            }
-        }
-          stage("Realizar un comando de tipo bat ipconfig /flushdns")
-                {
-                    steps
-                    {
-                        bat "ipconfig /flushdns"
-                    }
-                }
+            agent any
 
-            stage("Tarea03: Generar un archivo de TXT con la información del Stage 1 e informar por consola que se genero el fichero")
-                {
-                    steps
+            options
                     {
-                    def resultFile = new File(RUTA_ABSOLUTA)
-                    resultFile.write(sumaResult)                   
+                        timeout(time: 5, unit: 'MINUTES')
                     }
-                }
 
-    }
-post
-{
-    always
-    {
-        echo "El pipeline se ejecuto. "
-    }
-    failure
-    {
-        echo 'EL pipeline fallo'
-        script
-        {
-        def errorMessage = currentBuild.rawBuild.getLog(1000).join('\n')
-        echo 'Detalles del error: ${errorMessage}'
-        mail to: "soporte@dominio.com", subject: "Pipeline Fallo", body: "El pipeline no se ejecuto."
+            environment
+                    {
+                        RUTA_ABSOLUTA = "C:\\sumaresult.txt"
+                    }
+
+            stages
+                    {
+                        stage("Tarea01-Realizar operaciones aritmeticas generales con dos numeros agregados e informar por consola los valores")
+                                {
+                                    steps {
+                                        script {
+                                            suma = numero1 + numero2
+                                            sumaResult = "La suma de los dos numeros es: " + suma
+                                            echo sumaResult
+                                        }
+                                    }
+                                }
+
+
+                        stage("Tarea02:Realizar un comando de tipo bat ipconfig /flushdns")
+                                {
+                                    steps
+                                            {
+                                                bat "ipconfig /flushdns"
+                                            }
+                                }
+
+                        stage("Tarea03: Generar un archivo de TXT con la información del Stage 1 e informar por consola que se genero el fichero")
+                                {
+                                    steps
+                                            {
+                                                script {
+                                                    def resultFile = new File(RUTA_ABSOLUTA)
+                                                    resultFile.write(sumaResult)
+                                                }
+                                            }
+                                }
+                    }
+            post
+                    {
+                        always
+                                {
+                                    echo "El pipeline se ejecuto. "
+                                }
+                        failure
+                                {
+                                    echo 'EL pipeline fallo'
+                                    script
+                                            {
+                                                def errorMessage = currentBuild.rawBuild.getLog(1000).join('\n')
+                                                echo 'Detalles del error: ${errorMessage}'
+                                            }
+                                }
+                        unstable
+                                {
+                                    echo "El pipeline no se ejecuto de forma estable."
+                                }
+                        success
+                                {
+                                    echo "Mensaje a ejecutar si salio todo bien"
+                                }
+                    }
         }
-    }
-    unstable
-    {
-        echo "El pipeline no se ejecuto de forma estable."
-    }
-    success
-    {
-        echo "Mensaje a ejecutar si salio todo bien"
-    }
-}
-}
