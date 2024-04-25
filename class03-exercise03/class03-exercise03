@@ -14,7 +14,7 @@ pipeline
             environment
                     {
                         ROOT_FOLDER = "C:\\"
-                        RESULT_FILE = "class03-exercise02_data_result_file"
+                        RESULT_FILE = "class03-exercise03_data_result_file"
                     }
             stages
                     {
