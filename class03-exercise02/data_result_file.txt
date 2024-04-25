@@ -1,0 +1,4 @@
+La suma es: 15
+La resta es: 5
+La multiplicacion es: 50
+La division es: 2

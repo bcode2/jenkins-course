@@ -1,0 +1,39 @@
+def resultFileContent
+pipeline
+        {
+            agent any
+            options
+                    {
+                        timeout(time: 5, unit: 'MINUTES')
+                    }
+
+            environment
+                    {
+                        ROOT_FOLDER = "C:\\"
+                        SOURCE_FILE="data_source_file.txt"
+                        RESULT_FILE="data_result_file.txt"
+                    }
+            stages
+                    {
+                        stage("class03-exercise02")
+                                {
+                                    steps
+                                            {
+                                                script
+                                                        {
+                                                            fileSourceContent = readFile(file: "${ROOT_FOLDER}${SOURCE_FILE}")
+                                                            def numArray = fileSourceContent.split(',')
+                                                            def number01 = numArray[0].toInteger()
+                                                            def number02 = numArray[1].toInteger()
+
+                                                            resultFileContent = "La suma es: " + (number02 + number01)+ "\n"
+                                                                    .concat("La resta es: " + (number02 - number01))+ "\n"
+                                                                    .concat("La multiplicacion es: " + (number02 * number01))+ "\n"
+                                                                    .concat("La division es: " + (number02 / number01))
+
+                                                            writeFile(file: "${ROOT_FOLDER}${RESULT_FILE}", text: resultFileContent)
+                                                        }
+                                            }
+                                }
+                    }
+        }
