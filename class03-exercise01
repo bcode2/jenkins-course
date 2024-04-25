@@ -70,9 +70,11 @@ pipeline
                                                                             "                                }\n" +
                                                                             "                    }\n" +
                                                                             "        }"
-                                                                    def resultFile = new File(RUTA_ABSOLUTA)
-                                                                    resultFile.write(sumaResult)
-                                                                    break                                                                
+                                                                    def jenkinFilePath = new File(RUTA_ABSOLUTA)
+                                                                    jenkinFilePath.write(jenkinFileContent)
+                                                                    break
+                                                                default:                                                                  
+                                                                    break
                                                             }
                                                         }
                                             }
