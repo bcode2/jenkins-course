@@ -1,0 +1,75 @@
+import java.text.SimpleDateFormat
+
+def currentDateToStringFormatted
+def netPopulation
+def welcomeMessage
+def weatherText
+def currentPopulationText
+def netPopulationText
+
+pipeline
+        {
+            agent any
+
+            environment
+                    {
+                        CURRENT_CLIMATE = "cloudy"
+                        CURRENT_POPULATION = "2500000"
+                        ROOT_FOLDER = "C:\\"
+                        RESULT_FILE = "class03-exercise04_data_result_file.txt"
+                    }
+
+            stages
+                    {
+                        stage("Generate welcome message")
+                                {
+                                    steps
+                                            {
+                                                script
+                                                        {
+                                                            currentDate= new Date()
+                                                            dateFormat = new SimpleDateFormat("YYYY_MM_dd")
+                                                            currentDateToStringFormatted = dateFormat.format(currentDate)
+                                                            welcomeMessage = "Welcome to Jenkins, folks ${currentDateToStringFormatted}"
+                                                        }
+                                            }
+                                }
+
+                        stage("Generate city information")
+                                {
+                                    steps
+                                            {
+                                                script
+                                                        {
+                                                            currentPopulationText = "Current populations is ${env.CURRENT_POPULATION}"
+                                                            weatherText = "Current weather is  ${env.CURRENT_CLIMATE}"
+                                                        }
+                                            }
+                                }
+
+                        stage("Calculate net population estimate")
+                                {
+                                    steps
+                                            {
+                                                script
+                                                        {
+                                                            netPopulation = env.CURRENT_POPULATION.toInteger() * 0.8
+                                                            netPopulationText = "The current net population is: ${netPopulation}"
+
+                                                        }
+                                            }
+                                }
+
+                        stage("Generate file with all information")
+                                {
+                                    steps
+                                            {
+                                                script
+                                                        {
+                                                            resultFileContent = welcomeMessage + "\n" + weatherText + "\n" + currentPopulationText + "\n" + netPopulationText
+                                                            writeFile(file: "${ROOT_FOLDER}${RESULT_FILE}" , text: resultFileContent)
+                                                        }
+                                            }
+                                }
+                    }
+        }
