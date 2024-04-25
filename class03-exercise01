@@ -1,0 +1,81 @@
+import java.text.SimpleDateFormat
+
+pipeline
+        {
+            agent any
+            options
+                    {
+                        timeout(time: 5, unit: 'MINUTES')
+                    }
+
+            environment
+                    {
+                        RUTA_ABSOLUTA = "C:\\sumaresult.txt"
+                    }
+            stages
+                    {
+                        stage("Manejo de fechas")
+                                {
+                                    steps
+                                            {
+                                                script
+                                                        {
+                                                            dia = new Date()
+                                                            println dia
+                                                            def weather  ="terrible"
+                                                            formato = new SimpleDateFormat("dd/MM/yyyy")
+                                                            fechaFormato = formato.format(dia)
+                                                            println fechaFormato
+                                                            mapa = [1: "Lunes", 2: "Martes", 3: "Miercoles", 4: "Jueves", 5: "Viernes", 6: "Sabado", 7: "Domingo"]
+                                                            dia_numero = new Date().getDay()
+                                                           // println "El dia actual es: " + mapa[dia_numero]
+
+                                                            switch (dia_numero) {
+                                                                case 1:
+                                                                    numero1 = 1000
+                                                                    numero2 = 3000
+                                                                    suma = numero1 + numero2
+                                                                    multiplicacion=numero1 * numero2
+                                                                    division=numero1 / numero2
+                                                                    resta=numero1 - numero2
+                                                                    println "El numero 1 es igual a: " + numero1
+                                                                    println "El numero 2 es igual a: " + numero2
+                                                                    println "La suma de los dos numeros es: " + suma
+                                                                    println "La multiplicacion de los dos numeros es: " + multiplicacion
+                                                                    println "La division de los dos numeros es: " + division
+                                                                    println "La resta de los dos numeros es: " + resta
+                                                                    break
+                                                                case 2:
+                                                                    def cause = currentBuild.getBuildCauses('hudson.model.Cause$UserIdCause')
+                                                                    echo "userName: ${cause.userName}"
+                                                                    break
+                                                                case 3:
+                                                                    echo "El pipeline se ha ejecutado"
+                                                                    break
+                                                                case 4:
+                                                                    echo "El clima esta ${weather}"
+                                                                    break
+                                                                case 5:
+                                                                    def jenkinFileContent="pipeline\n" +
+                                                                            "        {\n" +
+                                                                            "            agent any\n" +
+                                                                            "            stages\n" +
+                                                                            "                    {\n" +
+                                                                            "                        stage(\"Lo estas haciendo de maravilas!\")\n" +
+                                                                            "                                {\n" +
+                                                                            "                                    steps {\n" +
+                                                                            "                                        echo sumaResult\n" +
+                                                                            "\n" +
+                                                                            "                                    }\n" +
+                                                                            "                                }\n" +
+                                                                            "                    }\n" +
+                                                                            "        }"
+                                                                    def resultFile = new File(RUTA_ABSOLUTA)
+                                                                    resultFile.write(sumaResult)
+                                                                    break                                                                
+                                                            }
+                                                        }
+                                            }
+                                }
+                    }
+        }
