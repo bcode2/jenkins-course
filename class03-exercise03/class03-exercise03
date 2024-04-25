@@ -1,0 +1,45 @@
+import java.text.SimpleDateFormat
+
+def startNumber = 1
+def resultFileContent = ""
+def fileNameSuffix = ""
+pipeline
+        {
+            agent any
+            options
+                    {
+                        timeout(time: 5, unit: 'MINUTES')
+                    }
+
+            environment
+                    {
+                        ROOT_FOLDER = "C:\\"
+                        RESULT_FILE = "class03-exercise02_data_result_file"
+                    }
+            stages
+                    {
+                        stage("Manejo de fechas")
+                                {
+                                    steps
+                                            {
+                                                script
+                                                        {
+                                                            currentDate = new Date()
+                                                            counter = 1
+                                                            dateFormat = new SimpleDateFormat("yyyyMMdd")
+                                                            currentDateToStringFormatted = dateFormat.format(currentDate)
+                                                            fileNameSuffix = "salida_" + currentDateToStringFormatted
+
+                                                            while (counter <= 10) {
+                                                                resultFileContent = resultFileContent + "\n" + startNumber**2
+                                                                startNumber++
+                                                                counter++
+                                                            }
+
+                                                            writeFile(file: "${ROOT_FOLDER}${RESULT_FILE}" + "_" + fileNameSuffix + ".txt", text: resultFileContent)
+                                                            println(resultFileContent)
+                                                        }
+                                            }
+                                }
+                    }
+        }
